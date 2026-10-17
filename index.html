@@ -1538,11 +1538,18 @@ function wake(){ document.body.classList.remove('idle'); clearTimeout(idleT);
 
 /* ---------------- 🏆 تنافس المجموعات ---------------- */
 const scores=LESSON.teams.map(()=>0);
+// 💾 حفظ النقاط في المتصفح ومزامنتها بين كل التبويبات المفتوحة
+const SCORE_KEY='kh-scores:'+LESSON.teams.map(t=>t.name).join('|');
+function loadScores(){ try{ const v=JSON.parse(localStorage.getItem(SCORE_KEY)||'null'); if(Array.isArray(v)) scores.forEach((_,k)=>scores[k]=Math.max(0,+v[k]||0)); }catch(e){} }
+function saveScores(){ try{ localStorage.setItem(SCORE_KEY,JSON.stringify(scores)); }catch(e){} }
+loadScores();
+addEventListener('storage',e=>{ if(e.key!==SCORE_KEY) return; if(e.newValue===null) scores.fill(0); else loadScores(); drawScores(-1,true); });
 function addPoints(k,d){
   scores[k]=Math.max(0,scores[k]+d); drawScores(k);
   const chip=$(`#teams .tm[data-k="${k}"]`); chip&&retrigger(chip,'bump');
 }
-function drawScores(bumpIdx){
+function drawScores(bumpIdx, noSave){
+  if(!noSave) saveScores();
   const max=Math.max(...scores);
   // اللوحة الجانبية الكاملة
   $('#scList').innerHTML=LESSON.teams.map((t,k)=>`<div class="sc-row" style="--c:${t.color}"><span class="crown">${max>0&&scores[k]===max?'👑':''}</span>
