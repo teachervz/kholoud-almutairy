@@ -1215,8 +1215,9 @@ R.order = {
           const sl=slots[k]; sl.classList.add('filled'); sl.innerHTML=`<div class="placed"><span class="pi">${it.icon}</span><b>${it.t}</b><small>${it.en||''}</small></div>`;
           sl.onclick=()=>{ slots.forEach(x=>x.classList.remove('sel')); sl.classList.add('sel'); info.innerHTML=it.info; };
           b.classList.add('gone'); info.innerHTML=it.info; idx++;
-          if(idx===s.items.length){ info.innerHTML='🎉 <b>'+MSG.allDone+'</b> — اضغطي على أي مرحلة لمراجعة دور الأمن فيها.'; celebrate($('.slots',sec)); }
+          if(idx===s.items.length){ info.innerHTML='🎉 <b>'+MSG.allDone+'</b> — اضغطي على أي مرحلة لمراجعة دور الأمن فيها.'; celebrate($('.slots',sec),true); }
           else sound.ding();
+          showAward(1);   // نقطة للمجموعة بعد كل خطوة صحيحة
         } else { shake(b); sound.wrong(); info.innerHTML='🤔 ليست هذه المرحلة التالية… فكّري: ماذا نفعل قبل ذلك؟ '+MSG.wrong; }
       };
       pool.appendChild(b);
@@ -1267,8 +1268,9 @@ R.sort = {
         const chip=document.createElement('div'); chip.className='bk-chip'; chip.textContent=`${it.icon||''} ${it.t}`; list.appendChild(chip);
         const c=$('.bk-count',b); c.textContent=+c.textContent+1;
         i++; setFb(fb,true,MSG.short);
-        if(i===items.length){ card.innerHTML=`<div class="sc-ic">🎉</div><div>${MSG.allDone}</div>`; retrigger(card,'enter'); prog.textContent='✓'; $('.sort-hint',sec).style.visibility='hidden'; celebrate(card); }
+        if(i===items.length){ card.innerHTML=`<div class="sc-ic">🎉</div><div>${MSG.allDone}</div>`; retrigger(card,'enter'); prog.textContent='✓'; $('.sort-hint',sec).style.visibility='hidden'; celebrate(card,true); }
         else { sound.ding(); show(); }
+        showAward(1);   // نقطة للمجموعة بعد كل إجابة صحيحة
       } else { shake(card); sound.wrong(); setFb(fb,false); }
     });
   }
