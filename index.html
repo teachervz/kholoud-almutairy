@@ -1497,6 +1497,7 @@ function updateUI(){
   $('#pgnum').textContent=`${current+1} / ${slides.length}`;
   $('#progress i').style.width=((current+1)/slides.length*100)+'%';
   $('#prev').disabled=current===0; $('#next').disabled=current===slides.length-1;
+  try{ history.replaceState(null,'','#'+(current+1)); }catch(e){}   // رابط الشريحة: index.html#رقم
 }
 
 /* ---------------- 📐 ملاءمة الشاشة 16:9 ---------------- */
@@ -1574,7 +1575,10 @@ function showAward(pts){
 $('#awClose').onclick=()=>$('#award').classList.remove('open');
 
 /* ---------------- ▶️ البداية ---------------- */
-go(0);
+// الانتقال لشريحة محددة عبر الرابط، مثل: index.html#9
+const fromHash=()=>{ const n=parseInt(location.hash.slice(1),10); return n>=1&&n<=slides.length ? n-1 : 0; };
+addEventListener('hashchange',()=>{ const n=fromHash(); if(n!==current) go(n); });
+go(fromHash());
 </script>
 </body>
 </html>
